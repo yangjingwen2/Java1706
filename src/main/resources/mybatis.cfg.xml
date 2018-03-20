@@ -7,6 +7,7 @@
         <setting name="logImpl" value="LOG4J"/>
     </settings>
     <!--mybatis的核心配置-->
+
     <!--当前数据环境，，数据来源。 default当前项目采用哪一个数据源-->
     <environments default="development">
         <!--数据源，id是当前数据源的唯一标识-->
