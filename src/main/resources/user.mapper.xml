@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace命名空间，当前文档的一个标识符-->
+<mapper namespace="com.qianfeng.oa.user.dto.UserMapper" >
+
+    <!--resultMap结果集的映射-->
+    <!--id是当前resultMap的唯一标识-->
+    <!--type是结果的类型-->
+    <resultMap id="UserResultMap" type="com.qianfeng.oa.user.dto.User2DTO">
+        <id property="userI" column="user_id" javaType="java.lang.Integer"/>
+        <result property="username" column="user_name" javaType="java.lang.String"/>
+        <result property="email" column="user_email" javaType="java.lang.String"/>
+
+        <!--多对一-->
+        <association property="departmentDTO" javaType="com.qianfeng.oa.user.dto.DepartmentDTO">
+            <id property="id" column="department_id" javaType="java.lang.Integer"/>
+            <result property="name" column="department_name" javaType="java.lang.String"/>
+        </association>
+    </resultMap>
+
+
+    <!--查询语句-->
+    <select id="queryUser" resultType="com.qianfeng.oa.user.dto.UserDTO">
+        select * from oa_user
+    </select>
+
+    <select id="queryUserById" resultType="com.qianfeng.oa.user.dto.UserDTO">
+        select * from oa_user where user_name=#{name}
+    </select>
+
+    <select id="checkUser" resultType="com.qianfeng.oa.user.dto.UserDTO">
+        select * from oa_user where user_name = #{name} and user_password=#{password}
+    </select>
+
+    <!--resultType 结果集的类型：-->
+    <select id="login" resultType="com.qianfeng.oa.user.dto.UserDTO">
+        select * from oa_user where user_name = #{user_name} and user_password=#{user_password}
+    </select>
+
+    <!--resultMap就是结果集映射-->
+    <select id="queryUserByMap" resultMap="UserResultMap">
+        select * FROM oa_user
+    </select>
+
+    <insert id="save">
+        INSERT INTO oa_user(user_name,user_email,user_password,user_sex)
+        VALUES(#{username},#{email},#{password},#{sex})
+    </insert>
+
+    <select id="queryUserByName" resultMap="UserResultMap">
+        select * from oa_department d join oa_user u on d.department_id=u.fk_department_id and u.user_name=#{name}
+    </select>
+</mapper>
