@@ -1,6 +1,10 @@
 package com.qianfeng.oa.user.dto;
 
-public class User2DTO {
+import java.io.Serializable;
+
+public class User2DTO implements Serializable{
+
+    public static final long serialVersionUID = 1L;
 
     private Integer userI;
     private String username;

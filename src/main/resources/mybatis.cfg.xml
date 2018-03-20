@@ -3,9 +3,11 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+   <!--开启日志输出-->
     <settings>
         <setting name="logImpl" value="LOG4J"/>
     </settings>
+
     <!--mybatis的核心配置-->
 
     <!--当前数据环境，，数据来源。 default当前项目采用哪一个数据源-->

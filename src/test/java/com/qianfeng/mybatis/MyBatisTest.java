@@ -4,6 +4,7 @@ import com.qianfeng.oa.user.dto.DepartmentDTO;
 import com.qianfeng.oa.user.dto.User2DTO;
 import com.qianfeng.oa.user.dto.UserDTO;
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.jdbc.SQL;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -12,6 +13,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +23,7 @@ import java.util.Map;
  */
 public class MyBatisTest {
     private static SqlSessionFactory sqlSessionFactory;
+
     @BeforeClass
     public static void init(){
         //加载mybatis的核心配置文件
@@ -139,5 +142,99 @@ public class MyBatisTest {
         System.out.println(user.getUsername());
         DepartmentDTO departmentDTO = user.getDepartmentDTO();
         System.out.println(departmentDTO.getName());
+
+    }
+
+    /**
+     * 日志输出
+     */
+    @Test
+    public void testCase9(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        User2DTO user2DTO = sqlSession.selectOne("com.qianfeng.oa.user.dto.UserMapper.queryUserByName", "张三");
+        System.out.println(user2DTO.getUsername());
+        sqlSession.close();
+    }
+
+    /**
+     * 动态sql
+     */
+    @Test
+    public void testCase10(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        User2DTO user2DTO = new User2DTO();
+        user2DTO.setSex('0');
+        //user2DTO.setUserI(1);
+        user2DTO.setUsername("张三");
+        user2DTO.setEmail("222@123.com");
+        List<User2DTO> list = sqlSession.selectList("com.qianfeng.oa.user.dto.UserMapper.queryUserByConditional", user2DTO);
+    }
+
+    @Test
+    public void testCase11(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        list.add(2);
+        list.add(4);
+        List<Object> list1 = sqlSession.selectList("com.qianfeng.oa.user.dto.UserMapper.queryUserByPoint", list);
+    }
+
+    @Test
+    public void testCase12(){
+        String sql = new SQL() {
+            {
+                SELECT("user_name");
+                FROM("oa_user");
+                WHERE("user_id=1");
+
+            }
+        }.toString();
+        System.out.println("sql:  --- "+sql);
+    }
+
+    /**
+     * 缓存的验证
+     */
+    @Test
+    public void testCase13(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        list.add(2);
+        list.add(4);
+
+        List<User2DTO> user2DTOList = sqlSession.selectList("com.qianfeng.oa.user.dto.UserMapper.queryUserByPoint", list);
+        for (User2DTO dto:user2DTOList) {
+            System.out.println(dto.getUsername());
+        }
+
+        List<User2DTO> user2DTOList2 = sqlSession.selectList("com.qianfeng.oa.user.dto.UserMapper.queryUserByPoint", list);
+        for (User2DTO dto:user2DTOList2) {
+            System.out.println(dto.getUsername());
+        }
+        sqlSession.close();
+    }
+
+    /**
+     * 二级缓存的验证
+     */
+    @Test
+    public void testCase14(){
+        SqlSession sqlSession1 = sqlSessionFactory.openSession();
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        list.add(2);
+        list.add(4);
+
+        List<User2DTO> user2DTOList = sqlSession1.selectList("com.qianfeng.oa.user.dto.UserMapper.queryUserByPoint", list);
+        for (User2DTO dto:user2DTOList) {
+            System.out.println(dto.getUsername());
+        }
+        sqlSession1.close();
+
+        SqlSession sqlSession2 = sqlSessionFactory.openSession();
+        List<User2DTO> user2DTOList2 = sqlSession2.selectList("com.qianfeng.oa.user.dto.UserMapper.queryUserByPoint", list);
+        for (User2DTO dto:user2DTOList2) {
+            System.out.println(dto.getUsername());
+        }
+        sqlSession2.close();
     }
 }
