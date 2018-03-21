@@ -29,7 +29,7 @@
     </select>
 
     <select id="queryUserById" resultType="com.qianfeng.oa.user.dto.UserDTO">
-        select * from oa_user where user_name=#{name}
+        select * from oa_user where user_id=#{id}
     </select>
 
     <select id="checkUser" resultType="com.qianfeng.oa.user.dto.UserDTO">

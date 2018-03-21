@@ -1,6 +1,8 @@
 package com.qianfeng.oa.user.dto;
 
-public class UserDTO {
+import java.io.Serializable;
+
+public class UserDTO implements Serializable{
 
     private Integer user_id;
     private String user_name;
