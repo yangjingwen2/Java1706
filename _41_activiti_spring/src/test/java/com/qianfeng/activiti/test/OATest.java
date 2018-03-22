@@ -1,6 +1,8 @@
 package com.qianfeng.activiti.test;
 
 import org.activiti.engine.*;
+import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.history.HistoricTaskInstanceQuery;
 import org.activiti.engine.identity.User;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.DeploymentBuilder;
@@ -8,8 +10,10 @@ import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.junit.Test;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class OATest {
 
@@ -156,6 +160,45 @@ public class OATest {
 
             //2、人事确认以上信息之后，进行批复
             taskService.complete(id);
+        }
+
+
+    }
+
+    /**
+     * 查询审批的历史纪律
+     */
+    @Test
+    public void testCase7(){
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        //HistoryService  查询历史纪律的服务
+        HistoryService historyService = processEngine.getHistoryService();
+        TaskService taskService = processEngine.getTaskService();
+
+        //HistoricTaskInstanceQuery查询历史任务
+        HistoricTaskInstanceQuery taskInstanceQuery = historyService.createHistoricTaskInstanceQuery();
+        List<HistoricTaskInstance> list = taskInstanceQuery
+                .taskAssignee("zhangsan")//查询具体审批人的数据
+                .taskCompletedBefore(new Date())//查询（现在为结点的以前的）历史任务
+                .orderByHistoricTaskInstanceStartTime() //以任务的开始时间进行排序
+                .desc() //倒序
+                .list();
+        //显示历史数据
+        for (HistoricTaskInstance taskInstance:list) {
+            System.out.println(taskInstance.getName());
+            String id = taskInstance.getId();
+            Map<String, Object> variables = taskInstance.getTaskLocalVariables();
+            Object time1 = variables.get("time");
+            System.out.println("--->"+time1);
+            String parentTaskId = taskInstance.getParentTaskId();
+            System.out.println(parentTaskId);
+            System.out.println(taskInstance.getId());
+            System.out.println(taskInstance.getAssignee());
+            //获取当前任务中的变量
+            Object time = taskService.getVariable(id, "time");
+            Object department = taskService.getVariable(id, "department");
+            System.out.println(time + "/" + department);
+
         }
     }
 }
