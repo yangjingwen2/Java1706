@@ -22,6 +22,6 @@ public class SpringTest {
 
     @Test
     public void testCase2(){
-        userDAO.test();
+        userDAO.query();
     }
 }

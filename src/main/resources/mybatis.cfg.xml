@@ -11,12 +11,12 @@
     <!--mybatis的核心配置-->
 
     <!--当前数据环境，，数据来源。 default当前项目采用哪一个数据源-->
-    <!--<environments default="development">
-        &lt;!&ndash;数据源，id是当前数据源的唯一标识&ndash;&gt;
+    <environments default="development">
+        <!--数据源，id是当前数据源的唯一标识-->
         <environment id="development">
-            &lt;!&ndash;采用JDBC默认的事务进行事务的管理&ndash;&gt;
+            <!--采用JDBC默认的事务进行事务的管理-->
             <transactionManager type="JDBC"/>
-            &lt;!&ndash;配置数据源，type表示启用连接池&ndash;&gt;
+            <!--配置数据源，type表示启用连接池-->
             <dataSource type="POOLED">
                 <property name="driver" value="com.mysql.jdbc.Driver"/>
                 <property name="url" value="jdbc:mysql://localhost:3306/db_1706"/>
@@ -24,7 +24,7 @@
                 <property name="password" value="123456"/>
             </dataSource>
         </environment>
-    </environments>-->
+    </environments>
     <mappers>
         <mapper resource="user.mapper.xml"/>
         <mapper resource="department.mapper.xml"/>

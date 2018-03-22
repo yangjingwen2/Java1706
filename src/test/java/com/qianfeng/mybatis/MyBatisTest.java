@@ -113,15 +113,15 @@ public class MyBatisTest {
     public void testCase6(){
         SqlSession sqlSession = sqlSessionFactory.openSession();
         User2DTO user2DTO = new User2DTO();
-        user2DTO.setUsername("lisi2");
-        user2DTO.setEmail("333@126.com");
-        user2DTO.setPassword("123");
+        user2DTO.setUsername("lisi3");
+        user2DTO.setEmail("4444@126.com");
+        user2DTO.setPassword("555");
         user2DTO.setSex('1');
         //返回结果是受影响的行数
         int num = sqlSession.insert("com.qianfeng.oa.user.dto.UserMapper.save", user2DTO);
         sqlSession.commit();
         System.out.println(num);
-//        sqlSession.close();
+        sqlSession.close();
     }
 
     @Test
